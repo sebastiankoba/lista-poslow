@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/model/parliament_member/parliament_member.dart';
 import 'cubit/parliament_members_cubit.dart';
@@ -14,12 +15,15 @@ class ParliamentMembersScreen extends StatelessWidget {
   static const _searchFieldWidth = 300.0;
   static const _pageTitleHeight = 32.0;
   static const _pageSubtitleHeight = 22.0;
-  static const _verticalMarginHeight = 32.0;
+  static const _verticalMarginHeight = 16.0;
   static const _verticalInnerMarginHeight = 20.0;
-  static const _horizontalMarginWidth = 32.0;
+  static const _horizontalMarginWidth = 16.0;
+  static const _parliamentMemberNameWidth = 260.0;
 
   @override
   Widget build(BuildContext context) {
+    bool isMobile = MediaQuery.of(context).size.width < 600;
+
     ScrollController scrollController = ScrollController();
     scrollController.addListener(() {
       if(scrollController.position.pixels == scrollController.position.maxScrollExtent) {
@@ -39,9 +43,9 @@ class ParliamentMembersScreen extends StatelessWidget {
                 data: (parliamentMembers, termNum) {
                   nextView = Column(
                     children: [
-                      pageTop(termNum),
-                      parliamentMembersHeader(),
-                      Expanded(child: parliamentMembersList(parliamentMembers, scrollController)),
+                      pageTop(termNum, isMobile),
+                      parliamentMembersHeader(isMobile),
+                      Expanded(child: parliamentMembersList(parliamentMembers, scrollController, isMobile)),
                     ],
                   );
                 },
@@ -56,13 +60,44 @@ class ParliamentMembersScreen extends StatelessWidget {
     );
   }
 
-  Widget pageTop(String termNum) {
+  Widget pageTop(String termNum, bool mobile) {
     return Padding(
       padding: const EdgeInsets.only(left: _horizontalMarginWidth, right: _horizontalMarginWidth, top: _verticalMarginHeight, bottom: _verticalInnerMarginHeight),
-      child: Row(
+      child: mobile ? Column(
         children: [
-          pageHeader(termNum),
-          listModificators()
+          Container(
+            width: double.maxFinite,
+              child: pageHeader(termNum)
+          ),
+          Container(
+            margin: const EdgeInsets.only(top: _verticalInnerMarginHeight),
+            width: double.maxFinite,
+              child: Column(
+                children: [
+                  //filterButton(),
+                  SizedBox(
+                      width: double.maxFinite,
+                      height: _searchFieldHeight,
+                      child: searchField()
+                  ),
+                ],
+              )
+          )
+        ],
+      ) : Row(
+        children: [
+          Expanded(child: pageHeader(termNum)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              //filterButton(),
+              SizedBox(
+                  width: _searchFieldWidth,
+                  height: _searchFieldHeight,
+                  child: searchField()
+              ),
+            ],
+          )
         ],
       ),
     );
@@ -103,14 +138,12 @@ class ParliamentMembersScreen extends StatelessWidget {
     );
   }
   Widget listModificators() {
-    return Expanded(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            //filterButton(),
-            searchField(),
-          ],
-        )
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        //filterButton(),
+        searchField(),
+      ],
     );
   }
   Widget filterButton() {
@@ -125,45 +158,42 @@ class ParliamentMembersScreen extends StatelessWidget {
     );
   }
   Widget searchField() {
-    return const SizedBox(
-      width: _searchFieldWidth,
-      height: _searchFieldHeight,
-      child: TextField(
-        enabled: false,
-        style: TextStyle(
-          fontSize: 14,
-          color: Colors.black,
-        ),
-        decoration: InputDecoration(
-          hintText: "Szukaj",
-          contentPadding: EdgeInsets.all(2.0),
-          prefixIcon: Icon(Icons.search, color: Colors.grey),
-          isDense: true,
-          border: OutlineInputBorder()
-        ),
+    return TextField(
+      enabled: false,
+      style: TextStyle(
+        fontSize: 14,
+        color: Colors.black,
+      ),
+      decoration: InputDecoration(
+        hintText: "Szukaj",
+        contentPadding: EdgeInsets.all(2.0),
+        prefixIcon: Icon(Icons.search, color: Colors.grey),
+        isDense: true,
+        border: OutlineInputBorder()
       ),
     );
   }
 
-  Widget parliamentMembersHeader() {
+  Widget parliamentMembersHeader(bool isMobile) {
     return Padding(
       padding: const EdgeInsets.only(left: _horizontalMarginWidth, right: _horizontalMarginWidth),
       child: Row(
         children: [
-          Expanded(
-            flex: 4,
-            child: Container(
-                height: _listItemHeight,
-                alignment: Alignment.centerLeft,
-                child: const Text("Poseł", style: TextStyle(fontWeight: FontWeight.bold))
-            ),
+          Container(
+              width: _parliamentMemberNameWidth,
+              height: _listItemHeight,
+              alignment: Alignment.centerLeft,
+              child: const Text("Poseł", style: TextStyle(fontWeight: FontWeight.bold))
           ),
-          Expanded(
-            flex: 2,
-            child: Container(
-                height: _listItemHeight,
-                alignment: Alignment.center,
-                child: const Text("Wiek", style: TextStyle(fontWeight: FontWeight.bold))
+          Visibility(
+            visible: !isMobile,
+            child: Expanded(
+              flex: 2,
+              child: Container(
+                  height: _listItemHeight,
+                  alignment: Alignment.center,
+                  child: const Text("Wiek", style: TextStyle(fontWeight: FontWeight.bold))
+              ),
             ),
           ),
           Expanded(
@@ -174,28 +204,37 @@ class ParliamentMembersScreen extends StatelessWidget {
                 child: const Text("Klub", style: TextStyle(fontWeight: FontWeight.bold))
             ),
           ),
-          Expanded(
-            flex: 3,
-            child: Container(
-                height: _listItemHeight,
-                alignment: Alignment.center,
-                child: const Text("Okręg", style: TextStyle(fontWeight: FontWeight.bold))
+          Visibility(
+            visible: !isMobile,
+            child: Expanded(
+              flex: 3,
+              child: Container(
+                  height: _listItemHeight,
+                  alignment: Alignment.center,
+                  child: const Text("Okręg", style: TextStyle(fontWeight: FontWeight.bold))
+              ),
             ),
           ),
-          Expanded(
-            flex: 3,
-            child: Container(
-                height: _listItemHeight,
-                alignment: Alignment.center,
-                child: const Text("Wykształcenie", style: TextStyle(fontWeight: FontWeight.bold))
+          Visibility(
+            visible: !isMobile,
+            child: Expanded(
+              flex: 3,
+              child: Container(
+                  height: _listItemHeight,
+                  alignment: Alignment.center,
+                  child: const Text("Wykształcenie", style: TextStyle(fontWeight: FontWeight.bold))
+              ),
             ),
           ),
-          Expanded(
-            flex: 3,
-            child: Container(
-                height: _listItemHeight,
-                alignment: Alignment.center,
-                child: const Text("Głosów", style: TextStyle(fontWeight: FontWeight.bold))
+          Visibility(
+            visible: !isMobile,
+            child: Expanded(
+              flex: 3,
+              child: Container(
+                  height: _listItemHeight,
+                  alignment: Alignment.center,
+                  child: const Text("Głosów", style: TextStyle(fontWeight: FontWeight.bold))
+              ),
             ),
           )
         ],
@@ -203,31 +242,32 @@ class ParliamentMembersScreen extends StatelessWidget {
     );
   }
 
-  Widget parliamentMemberItem(String imageUrl, String fullName, String age, String club, String districtName, String educationLevel, String votesCount) {
+  Widget parliamentMemberItem(String imageUrl, String fullName, String age, String club, String districtName, String educationLevel, String votesCount, bool isMobile) {
     return Padding(
       padding: const EdgeInsets.only(left: _horizontalMarginWidth, right: _horizontalMarginWidth),
       child: Row(
         children: [
-          Expanded(
-            flex: 4,
-            child: Container(
-                height: _listItemHeight,
-                alignment: Alignment.centerLeft,
-                child: Row(
-                  children: [
-                    imageView(imageUrl),
-                    SizedBox(width: 10.0),
-                    Text(fullName)
-                  ],
-                )
-            ),
+          Container(
+              width: _parliamentMemberNameWidth,
+              height: _listItemHeight,
+              alignment: Alignment.centerLeft,
+              child: Row(
+                children: [
+                  imageView(imageUrl),
+                  SizedBox(width: 10.0),
+                  Text(fullName)
+                ],
+              )
           ),
-          Expanded(
-            flex: 2,
-            child: Container(
-                height: _listItemHeight,
-                alignment: Alignment.center,
-                child: Text(age)
+          Visibility(
+            visible: !isMobile,
+            child: Expanded(
+              flex: 2,
+              child: Container(
+                  height: _listItemHeight,
+                  alignment: Alignment.center,
+                  child: Text(age)
+              ),
             ),
           ),
           Expanded(
@@ -238,28 +278,37 @@ class ParliamentMembersScreen extends StatelessWidget {
                 child: Text(club)
             ),
           ),
-          Expanded(
-            flex: 3,
-            child: Container(
-                height: _listItemHeight,
-                alignment: Alignment.center,
-                child: Text(districtName)
+          Visibility(
+            visible: !isMobile,
+            child: Expanded(
+              flex: 3,
+              child: Container(
+                  height: _listItemHeight,
+                  alignment: Alignment.center,
+                  child: Text(districtName)
+              ),
             ),
           ),
-          Expanded(
-            flex: 3,
-            child: Container(
-                height: _listItemHeight,
-                alignment: Alignment.center,
-                child: Text(educationLevel)
+          Visibility(
+            visible: !isMobile,
+            child: Expanded(
+              flex: 3,
+              child: Container(
+                  height: _listItemHeight,
+                  alignment: Alignment.center,
+                  child: Text(educationLevel)
+              ),
             ),
           ),
-          Expanded(
-            flex: 3,
-            child: Container(
-                height: _listItemHeight,
-                alignment: Alignment.center,
-                child: Text(votesCount)
+          Visibility(
+            visible: !isMobile,
+            child: Expanded(
+              flex: 3,
+              child: Container(
+                  height: _listItemHeight,
+                  alignment: Alignment.center,
+                  child: Text(votesCount)
+              ),
             ),
           )
         ],
@@ -267,7 +316,7 @@ class ParliamentMembersScreen extends StatelessWidget {
     );
   }
 
-  Widget parliamentMembersList(List <ParliamentMember> parliamentMembers, ScrollController scrollController) {
+  Widget parliamentMembersList(List <ParliamentMember> parliamentMembers, ScrollController scrollController, bool isMobile) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         log("ListView height: ${constraints.biggest.height}");
@@ -285,7 +334,8 @@ class ParliamentMembersScreen extends StatelessWidget {
                   parliamentMembers[index].club.toString(),
                   parliamentMembers[index].districtName.toString(),
                   parliamentMembers[index].educationLevel.toString(),
-                  parliamentMembers[index].numberOfVotes.toString()
+                  parliamentMembers[index].numberOfVotes.toString(),
+                  isMobile
               );
             }
         );
