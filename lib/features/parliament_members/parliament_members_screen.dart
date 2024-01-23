@@ -41,12 +41,14 @@ class ParliamentMembersScreen extends StatelessWidget {
                   nextView = CircularProgressIndicator();
                 },
                 data: (parliamentMembers, termNum) {
-                  nextView = Column(
-                    children: [
-                      pageTop(termNum, isMobile),
-                      parliamentMembersHeader(isMobile),
-                      Expanded(child: parliamentMembersList(parliamentMembers, scrollController, isMobile)),
-                    ],
+                  nextView = SelectionArea(
+                    child: Column(
+                      children: [
+                        pageTop(termNum, isMobile),
+                        parliamentMembersHeader(isMobile),
+                        Expanded(child: parliamentMembersList(parliamentMembers, scrollController, isMobile)),
+                      ],
+                    ),
                   );
                 },
                 error: (message) {
