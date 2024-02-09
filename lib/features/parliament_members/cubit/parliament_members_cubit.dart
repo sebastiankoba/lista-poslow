@@ -17,7 +17,7 @@ class ParliamentMembersCubit extends Cubit<ParliamentMembersCubitState> {
   }
 
   List<ParliamentMember> parliamentMembers = [];
-  int parliamentMembersToShow = 15;
+  int parliamentMembersToShow = 30;
   int? termNum;
 
   Future<void> getParliamentMembersFullData() async {

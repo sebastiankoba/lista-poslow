@@ -41,14 +41,34 @@ class ParliamentMembersScreen extends StatelessWidget {
                   nextView = CircularProgressIndicator();
                 },
                 data: (parliamentMembers, termNum) {
-                  nextView = SelectionArea(
-                    child: Column(
-                      children: [
-                        pageTop(termNum, isMobile),
-                        parliamentMembersHeader(isMobile),
-                        Expanded(child: parliamentMembersList(parliamentMembers, scrollController, isMobile)),
-                      ],
-                    ),
+                  nextView = CustomScrollView(
+                    controller: scrollController,
+                    slivers: [
+                      SliverAppBar(
+                        floating: true,
+                        stretch: true,
+                        surfaceTintColor: Colors.transparent,
+                        toolbarHeight: isMobile ? 200 : 140,
+                        flexibleSpace: pageTop(termNum, isMobile),
+                      ),
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                              return parliamentMemberItem(
+                                  "https://api.sejm.gov.pl/sejm/term10/MP/${parliamentMembers[index].id.toString()}/photo-mini",
+                                  "${parliamentMembers[index].lastName} ${parliamentMembers[index].firstName.toString()}",
+                                  (DateTime.now().difference(DateTime.parse(parliamentMembers[index].birthDate ?? "")).inDays ~/ 365).toString(),
+                                  parliamentMembers[index].club.toString(),
+                                  parliamentMembers[index].districtName.toString(),
+                                  parliamentMembers[index].educationLevel.toString(),
+                                  parliamentMembers[index].numberOfVotes.toString(),
+                                  isMobile
+                              );
+                            },
+                          childCount: parliamentMembers.length
+                        ),
+                      )
+                    ],
                   );
                 },
                 error: (message) {
@@ -64,7 +84,7 @@ class ParliamentMembersScreen extends StatelessWidget {
 
   Widget pageTop(String termNum, bool mobile) {
     return Padding(
-      padding: const EdgeInsets.only(left: _horizontalMarginWidth, right: _horizontalMarginWidth, top: _verticalMarginHeight, bottom: _verticalInnerMarginHeight),
+      padding: const EdgeInsets.only(left: _horizontalMarginWidth, right: _horizontalMarginWidth, top: _verticalMarginHeight),
       child: mobile ? Column(
         children: [
           Container(
@@ -84,22 +104,28 @@ class ParliamentMembersScreen extends StatelessWidget {
                   ),
                 ],
               )
-          )
+          ),
+          parliamentMembersHeader(mobile)
         ],
-      ) : Row(
+      ) : Column(
         children: [
-          Expanded(child: pageHeader(termNum)),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              //filterButton(),
-              SizedBox(
-                  width: _searchFieldWidth,
-                  height: _searchFieldHeight,
-                  child: searchField()
-              ),
+              Expanded(child: pageHeader(termNum)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  //filterButton(),
+                  SizedBox(
+                      width: _searchFieldWidth,
+                      height: _searchFieldHeight,
+                      child: searchField()
+                  ),
+                ],
+              )
             ],
-          )
+          ),
+          parliamentMembersHeader(mobile)
         ],
       ),
     );
@@ -178,7 +204,7 @@ class ParliamentMembersScreen extends StatelessWidget {
 
   Widget parliamentMembersHeader(bool isMobile) {
     return Padding(
-      padding: const EdgeInsets.only(left: _horizontalMarginWidth, right: _horizontalMarginWidth),
+      padding: const EdgeInsets.only(top: _verticalInnerMarginHeight),
       child: Row(
         children: [
           Container(
