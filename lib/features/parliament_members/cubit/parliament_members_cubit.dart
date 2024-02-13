@@ -26,6 +26,10 @@ class ParliamentMembersCubit extends Cubit<ParliamentMembersCubitState> {
       termNum = terms.singleWhere((element) => element.current ?? false).num;
       parliamentMembers = await _termRepository.getParliamentMembers(termNum.toString());
       parliamentMembers = parliamentMembers.where((element) => element.active ?? false).toList();
+      //default sorting
+      parliamentMembers.sort((a, b) {
+        return a.lastName.toString().compareTo(b.lastName.toString());
+      });
       log("Parliament members count: ${parliamentMembers.length}");
       emit(ParliamentMembersCubitState.data(parliamentMembers: parliamentMembers.sublist(0, parliamentMembersToShow), termNum: termNum.toString()));
     } catch(e, s) {
@@ -46,6 +50,19 @@ class ParliamentMembersCubit extends Cubit<ParliamentMembersCubitState> {
       }
     } catch(e, s) {
       emit(ParliamentMembersCubitState.error(mesage: s.toString()));
+    }
+  }
+
+  Future<void> loadFilteredParliamentMembers(String text) async {
+    if(text.isNotEmpty) {
+      List<ParliamentMember> filteredParliamentMembers = parliamentMembers.where((element) => element.lastName.toString().toLowerCase().contains(text.toLowerCase())).toList();
+      filteredParliamentMembers.sort((a, b) {
+        return a.lastName.toString().compareTo(b.lastName.toString());
+      });
+      emit(ParliamentMembersCubitState.data(parliamentMembers: filteredParliamentMembers, termNum: termNum.toString()));
+    } else {
+      parliamentMembersToShow = 30;
+      emit(ParliamentMembersCubitState.data(parliamentMembers: parliamentMembers.sublist(0, parliamentMembersToShow), termNum: termNum.toString()));
     }
   }
 }

@@ -49,7 +49,9 @@ class ParliamentMembersScreen extends StatelessWidget {
                         stretch: true,
                         surfaceTintColor: Colors.transparent,
                         toolbarHeight: isMobile ? 200 : 140,
-                        flexibleSpace: pageTop(termNum, isMobile),
+                        flexibleSpace: pageTop(termNum, isMobile, (text) {
+                          context.read<ParliamentMembersCubit>().loadFilteredParliamentMembers(text);
+                        }),
                       ),
                       SliverList(
                         delegate: SliverChildBuilderDelegate(
@@ -82,7 +84,7 @@ class ParliamentMembersScreen extends StatelessWidget {
     );
   }
 
-  Widget pageTop(String termNum, bool mobile) {
+  Widget pageTop(String termNum, bool mobile, Function(String) onTextChanged) {
     return Padding(
       padding: const EdgeInsets.only(left: _horizontalMarginWidth, right: _horizontalMarginWidth, top: _verticalMarginHeight),
       child: mobile ? Column(
@@ -100,7 +102,7 @@ class ParliamentMembersScreen extends StatelessWidget {
                   SizedBox(
                       width: double.maxFinite,
                       height: _searchFieldHeight,
-                      child: searchField()
+                      child: searchField(onTextChanged)
                   ),
                 ],
               )
@@ -119,7 +121,7 @@ class ParliamentMembersScreen extends StatelessWidget {
                   SizedBox(
                       width: _searchFieldWidth,
                       height: _searchFieldHeight,
-                      child: searchField()
+                      child: searchField(onTextChanged)
                   ),
                 ],
               )
@@ -165,15 +167,7 @@ class ParliamentMembersScreen extends StatelessWidget {
       ),
     );
   }
-  Widget listModificators() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        //filterButton(),
-        searchField(),
-      ],
-    );
-  }
+  
   Widget filterButton() {
     return OutlinedButton(
         onPressed: () {},
@@ -185,9 +179,12 @@ class ParliamentMembersScreen extends StatelessWidget {
         child: Text("Filtry")
     );
   }
-  Widget searchField() {
+  Widget searchField(Function(String) onTextChanged) {
     return TextField(
-      enabled: false,
+      onChanged: (text) {
+        onTextChanged(text);
+      },
+      enabled: true,
       style: TextStyle(
         fontSize: 14,
         color: Colors.black,
