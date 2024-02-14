@@ -1,7 +1,7 @@
-import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:sejm/domain/repository/term_repository.dart';
+import 'package:sejm/utils/PolishComparator.dart';
 
 import '../../../domain/model/parliament_member/parliament_member.dart';
 import '../../../domain/model/term/term.dart';
@@ -17,7 +17,8 @@ class ParliamentMembersCubit extends Cubit<ParliamentMembersCubitState> {
   }
 
   List<ParliamentMember> parliamentMembers = [];
-  int parliamentMembersToShow = 30;
+  List<ParliamentMember> parliamentMembersToShow = [];
+  int parliamentMembersToShowValue = 15;
   int? termNum;
 
   Future<void> getParliamentMembersFullData() async {
@@ -28,10 +29,11 @@ class ParliamentMembersCubit extends Cubit<ParliamentMembersCubitState> {
       parliamentMembers = parliamentMembers.where((element) => element.active ?? false).toList();
       //default sorting
       parliamentMembers.sort((a, b) {
-        return a.lastName.toString().compareTo(b.lastName.toString());
+        int result = PolishComparator.compare(a.lastName.toString().toLowerCase(), b.lastName.toString().toLowerCase());
+        return result;
       });
-      log("Parliament members count: ${parliamentMembers.length}");
-      emit(ParliamentMembersCubitState.data(parliamentMembers: parliamentMembers.sublist(0, parliamentMembersToShow), termNum: termNum.toString()));
+      parliamentMembersToShow = parliamentMembers;
+      emit(ParliamentMembersCubitState.data(parliamentMembers: parliamentMembersToShow.sublist(0, parliamentMembersToShowValue), termNum: termNum.toString()));
     } catch(e, s) {
       emit(ParliamentMembersCubitState.error(mesage: s.toString()));
     }
@@ -39,13 +41,13 @@ class ParliamentMembersCubit extends Cubit<ParliamentMembersCubitState> {
 
   Future<void> loadMoreParliamentMembers() async {
     try {
-      if(parliamentMembers.length > parliamentMembersToShow + 15) {
-        parliamentMembersToShow = parliamentMembersToShow + 15;
-        emit(ParliamentMembersCubitState.data(parliamentMembers: parliamentMembers.sublist(0, parliamentMembersToShow), termNum: termNum.toString()));
+      if(parliamentMembersToShow.length > parliamentMembersToShowValue + 15) {
+        parliamentMembersToShowValue = parliamentMembersToShowValue + 15;
+        emit(ParliamentMembersCubitState.data(parliamentMembers: parliamentMembersToShow.sublist(0, parliamentMembersToShowValue), termNum: termNum.toString()));
       } else  {
-        if((parliamentMembers.length - parliamentMembersToShow) < 15 && (parliamentMembers.length - parliamentMembersToShow) > 0) {
-          parliamentMembersToShow = parliamentMembersToShow + (parliamentMembers.length - parliamentMembersToShow);
-          emit(ParliamentMembersCubitState.data(parliamentMembers: parliamentMembers.sublist(0, parliamentMembersToShow), termNum: termNum.toString()));
+        if((parliamentMembersToShow.length - parliamentMembersToShowValue) < 15 && (parliamentMembersToShow.length - parliamentMembersToShowValue) > 0) {
+          parliamentMembersToShowValue = parliamentMembersToShowValue + (parliamentMembersToShow.length - parliamentMembersToShowValue);
+          emit(ParliamentMembersCubitState.data(parliamentMembers: parliamentMembersToShow.sublist(0, parliamentMembersToShowValue), termNum: termNum.toString()));
         }
       }
     } catch(e, s) {
@@ -53,16 +55,16 @@ class ParliamentMembersCubit extends Cubit<ParliamentMembersCubitState> {
     }
   }
 
-  Future<void> loadFilteredParliamentMembers(String text) async {
+  Future<void> filterParliamentMembers(String text) async {
     if(text.isNotEmpty) {
-      List<ParliamentMember> filteredParliamentMembers = parliamentMembers.where((element) => element.lastName.toString().toLowerCase().contains(text.toLowerCase())).toList();
-      filteredParliamentMembers.sort((a, b) {
-        return a.lastName.toString().compareTo(b.lastName.toString());
-      });
-      emit(ParliamentMembersCubitState.data(parliamentMembers: filteredParliamentMembers, termNum: termNum.toString()));
+      parliamentMembersToShow = parliamentMembers.where((element) => element.lastName.toString().toLowerCase().contains(text.toLowerCase())).toList();
+      if(parliamentMembersToShow.length < parliamentMembersToShowValue) {
+        parliamentMembersToShowValue = parliamentMembersToShow.length;
+      }
     } else {
-      parliamentMembersToShow = 30;
-      emit(ParliamentMembersCubitState.data(parliamentMembers: parliamentMembers.sublist(0, parliamentMembersToShow), termNum: termNum.toString()));
+      parliamentMembersToShow = parliamentMembers;
+      parliamentMembersToShowValue = 15;
     }
+    emit(ParliamentMembersCubitState.data(parliamentMembers: parliamentMembersToShow.sublist(0, parliamentMembersToShowValue), termNum: termNum.toString()));
   }
 }

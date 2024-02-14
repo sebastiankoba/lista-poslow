@@ -19,6 +19,8 @@ class ParliamentMembersScreen extends StatelessWidget {
   static const _verticalInnerMarginHeight = 20.0;
   static const _horizontalMarginWidth = 16.0;
   static const _parliamentMemberNameWidth = 260.0;
+  static const _webAppBarHeight = 140.0;
+  static const _mobileAppBarHeight = 200.0;
 
   @override
   Widget build(BuildContext context) {
@@ -41,36 +43,45 @@ class ParliamentMembersScreen extends StatelessWidget {
                   nextView = CircularProgressIndicator();
                 },
                 data: (parliamentMembers, termNum) {
-                  nextView = CustomScrollView(
-                    controller: scrollController,
-                    slivers: [
-                      SliverAppBar(
-                        floating: true,
-                        stretch: true,
-                        surfaceTintColor: Colors.transparent,
-                        toolbarHeight: isMobile ? 200 : 140,
-                        flexibleSpace: pageTop(termNum, isMobile, (text) {
-                          context.read<ParliamentMembersCubit>().loadFilteredParliamentMembers(text);
-                        }),
-                      ),
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                            (BuildContext context, int index) {
-                              return parliamentMemberItem(
-                                  "https://api.sejm.gov.pl/sejm/term10/MP/${parliamentMembers[index].id.toString()}/photo-mini",
-                                  "${parliamentMembers[index].lastName} ${parliamentMembers[index].firstName.toString()}",
-                                  (DateTime.now().difference(DateTime.parse(parliamentMembers[index].birthDate ?? "")).inDays ~/ 365).toString(),
-                                  parliamentMembers[index].club.toString(),
-                                  parliamentMembers[index].districtName.toString(),
-                                  parliamentMembers[index].educationLevel.toString(),
-                                  parliamentMembers[index].numberOfVotes.toString(),
-                                  isMobile
-                              );
-                            },
-                          childCount: parliamentMembers.length
-                        ),
-                      )
-                    ],
+                  nextView = LayoutBuilder(
+                    builder: (BuildContext context, BoxConstraints constraints) {
+                      double appBarHeight = isMobile ? _mobileAppBarHeight : _webAppBarHeight;
+                      double calculatedViewHeight = parliamentMembers.length * _listItemHeight + appBarHeight;
+                      if(calculatedViewHeight < constraints.biggest.height) {
+                        context.read<ParliamentMembersCubit>().loadMoreParliamentMembers();
+                      }
+                      return CustomScrollView(
+                        controller: scrollController,
+                        slivers: [
+                          SliverAppBar(
+                            floating: true,
+                            stretch: true,
+                            surfaceTintColor: Colors.transparent,
+                            toolbarHeight: appBarHeight,
+                            flexibleSpace: pageTop(termNum, isMobile, (text) {
+                              context.read<ParliamentMembersCubit>().filterParliamentMembers(text);
+                            }),
+                          ),
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                                    (BuildContext context, int index) {
+                                  return parliamentMemberItem(
+                                      "https://api.sejm.gov.pl/sejm/term$termNum/MP/${parliamentMembers[index].id.toString()}/photo-mini",
+                                      "${parliamentMembers[index].lastName} ${parliamentMembers[index].firstName.toString()}",
+                                      (DateTime.now().difference(DateTime.parse(parliamentMembers[index].birthDate ?? "")).inDays ~/ 365).toString(),
+                                      parliamentMembers[index].club.toString(),
+                                      parliamentMembers[index].districtName.toString(),
+                                      parliamentMembers[index].educationLevel.toString(),
+                                      parliamentMembers[index].numberOfVotes.toString(),
+                                      isMobile
+                                  );
+                                },
+                                childCount: parliamentMembers.length
+                            ),
+                          )
+                        ],
+                      );
+                    },
                   );
                 },
                 error: (message) {
@@ -159,7 +170,7 @@ class ParliamentMembersScreen extends StatelessWidget {
       height: _pageSubtitleHeight,
       child: Text(
         "Podstawowe informacje o posłach na Sejm RP ${termNum}. kadencji",
-        style: TextStyle(
+        style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.normal,
             color: Colors.black87
@@ -185,11 +196,11 @@ class ParliamentMembersScreen extends StatelessWidget {
         onTextChanged(text);
       },
       enabled: true,
-      style: TextStyle(
+      style: const TextStyle(
         fontSize: 14,
         color: Colors.black,
       ),
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         hintText: "Szukaj",
         contentPadding: EdgeInsets.all(2.0),
         prefixIcon: Icon(Icons.search, color: Colors.grey),
