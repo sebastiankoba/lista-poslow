@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:sejm/domain/repository/term_repository.dart';
-import 'package:sejm/utils/PolishComparator.dart';
+import 'package:sejm/utils/polish_comparator.dart';
 
 import '../../../domain/model/parliament_member/parliament_member.dart';
 import '../../../domain/model/term/term.dart';
