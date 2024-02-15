@@ -13,14 +13,12 @@ class ParliamentMembersScreen extends StatelessWidget {
   static const _listItemHeight = 50.0;
   static const _searchFieldHeight = 40.0;
   static const _searchFieldWidth = 300.0;
-  static const _pageTitleHeight = 32.0;
-  static const _pageSubtitleHeight = 22.0;
+  static const _pageTitleHeight = 36.0;
+  static const _pageSubtitleHeight = 40.0;
   static const _verticalMarginHeight = 16.0;
   static const _verticalInnerMarginHeight = 20.0;
   static const _horizontalMarginWidth = 16.0;
   static const _parliamentMemberNameWidth = 260.0;
-  static const _webAppBarHeight = 140.0;
-  static const _mobileAppBarHeight = 200.0;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +43,7 @@ class ParliamentMembersScreen extends StatelessWidget {
                 data: (parliamentMembers, termNum) {
                   nextView = LayoutBuilder(
                     builder: (BuildContext context, BoxConstraints constraints) {
-                      double appBarHeight = isMobile ? _mobileAppBarHeight : _webAppBarHeight;
+                      double appBarHeight = isMobile ? (_verticalInnerMarginHeight + _pageTitleHeight + _pageSubtitleHeight + _verticalInnerMarginHeight + _searchFieldHeight + _verticalInnerMarginHeight + _listItemHeight) : (_verticalMarginHeight + _pageTitleHeight + _pageSubtitleHeight + _verticalInnerMarginHeight + _listItemHeight);
                       double calculatedViewHeight = parliamentMembers.length * _listItemHeight + appBarHeight;
                       if(calculatedViewHeight < constraints.biggest.height) {
                         context.read<ParliamentMembersCubit>().loadMoreParliamentMembers();
@@ -125,17 +123,17 @@ class ParliamentMembersScreen extends StatelessWidget {
           Row(
             children: [
               Expanded(child: pageHeader(termNum)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  //filterButton(),
-                  SizedBox(
+              Container(
+                height: _pageTitleHeight + _pageSubtitleHeight,
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: SizedBox(
                       width: _searchFieldWidth,
                       height: _searchFieldHeight,
                       child: searchField(onTextChanged)
                   ),
-                ],
-              )
+                ),
+              ),
             ],
           ),
           parliamentMembersHeader(mobile)
@@ -167,9 +165,10 @@ class ParliamentMembersScreen extends StatelessWidget {
   }
   Widget pageSubtitle(String termNum) {
     return Container(
-      height: _pageSubtitleHeight,
+      height:_pageSubtitleHeight,
       child: Text(
         "Podstawowe informacje o posłach na Sejm RP ${termNum}. kadencji",
+        maxLines: 2,
         style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.normal,
@@ -203,7 +202,7 @@ class ParliamentMembersScreen extends StatelessWidget {
       decoration: const InputDecoration(
         hintText: "Szukaj",
         contentPadding: EdgeInsets.all(2.0),
-        prefixIcon: Icon(Icons.search, color: Colors.grey),
+        prefixIcon: Icon(Icons.search),
         isDense: true,
         border: OutlineInputBorder()
       ),
