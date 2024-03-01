@@ -60,6 +60,8 @@ class ParliamentMembersCubit extends Cubit<ParliamentMembersCubitState> {
       parliamentMembersToShow = parliamentMembers.where((element) => element.lastName.toString().toLowerCase().contains(text.toLowerCase())).toList();
       if(parliamentMembersToShow.length < parliamentMembersToShowValue) {
         parliamentMembersToShowValue = parliamentMembersToShow.length;
+      } else {
+        parliamentMembersToShowValue = 15;
       }
     } else {
       parliamentMembersToShow = parliamentMembers;
