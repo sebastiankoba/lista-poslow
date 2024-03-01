@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain/model/parliament_member/parliament_member.dart';
 import 'cubit/parliament_members_cubit.dart';
 
 class ParliamentMembersScreen extends StatelessWidget {
@@ -56,7 +55,7 @@ class ParliamentMembersScreen extends StatelessWidget {
                             stretch: true,
                             surfaceTintColor: Colors.transparent,
                             toolbarHeight: appBarHeight,
-                            flexibleSpace: pageTop(termNum, isMobile, (text) {
+                            flexibleSpace: pageTop(termNum, isMobile, context.read<ParliamentMembersCubit>().filterText ?? "", (text) {
                               context.read<ParliamentMembersCubit>().filterParliamentMembers(text);
                             }),
                           ),
@@ -65,11 +64,11 @@ class ParliamentMembersScreen extends StatelessWidget {
                                     (BuildContext context, int index) {
                                   return parliamentMemberItem(
                                       "https://api.sejm.gov.pl/sejm/term$termNum/MP/${parliamentMembers[index].id.toString()}/photo-mini",
-                                      "${parliamentMembers[index].lastName} ${parliamentMembers[index].firstName.toString()}",
+                                      parliamentMembers[index].lastFirstName.toString(),
                                       (DateTime.now().difference(DateTime.parse(parliamentMembers[index].birthDate ?? "")).inDays ~/ 365).toString(),
                                       parliamentMembers[index].club.toString(),
                                       parliamentMembers[index].districtName.toString(),
-                                      parliamentMembers[index].educationLevel.toString(),
+                                      parliamentMembers[index].profession ?? "-",
                                       parliamentMembers[index].numberOfVotes.toString(),
                                       isMobile
                                   );
@@ -93,7 +92,7 @@ class ParliamentMembersScreen extends StatelessWidget {
     );
   }
 
-  Widget pageTop(String termNum, bool mobile, Function(String) onTextChanged) {
+  Widget pageTop(String termNum, bool mobile, String initialSearchValue, Function(String) onTextChanged) {
     return Padding(
       padding: const EdgeInsets.only(left: _horizontalMarginWidth, right: _horizontalMarginWidth, top: _verticalMarginHeight),
       child: mobile ? Column(
@@ -111,7 +110,7 @@ class ParliamentMembersScreen extends StatelessWidget {
                   SizedBox(
                       width: double.maxFinite,
                       height: _searchFieldHeight,
-                      child: searchField(onTextChanged)
+                      child: searchField(initialSearchValue, onTextChanged)
                   ),
                 ],
               )
@@ -130,7 +129,7 @@ class ParliamentMembersScreen extends StatelessWidget {
                   child: SizedBox(
                       width: _searchFieldWidth,
                       height: _searchFieldHeight,
-                      child: searchField(onTextChanged)
+                      child: searchField(initialSearchValue, onTextChanged)
                   ),
                 ),
               ),
@@ -189,11 +188,12 @@ class ParliamentMembersScreen extends StatelessWidget {
         child: Text("Filtry")
     );
   }
-  Widget searchField(Function(String) onTextChanged) {
-    return TextField(
+  Widget searchField(String initialValue, Function(String) onTextChanged) {
+    return TextFormField(
       onChanged: (text) {
         onTextChanged(text);
       },
+      initialValue: initialValue,
       enabled: true,
       style: const TextStyle(
         fontSize: 14,
@@ -257,7 +257,7 @@ class ParliamentMembersScreen extends StatelessWidget {
               child: Container(
                   height: _listItemHeight,
                   alignment: Alignment.center,
-                  child: const Text("Wykształcenie", style: TextStyle(fontWeight: FontWeight.bold))
+                  child: const Text("Zawód", style: TextStyle(fontWeight: FontWeight.bold))
               ),
             ),
           ),
@@ -351,7 +351,7 @@ class ParliamentMembersScreen extends StatelessWidget {
     );
   }
 
-  Widget parliamentMembersList(List <ParliamentMember> parliamentMembers, ScrollController scrollController, bool isMobile) {
+  /*Widget parliamentMembersList(List <ParliamentMember> parliamentMembers, ScrollController scrollController, bool isMobile) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         log("ListView height: ${constraints.biggest.height}");
@@ -376,7 +376,7 @@ class ParliamentMembersScreen extends StatelessWidget {
         );
       },
     );
-  }
+  }*/
 
   Widget imageView(String imageUrl) {
     return CircleAvatar(

@@ -10,10 +10,9 @@ class ParliamentMember with _$ParliamentMember {
     String? birthDate,
     String? club,
     String? districtName,
-    String? educationLevel,
-    String? firstName,
+    String? profession,
+    String? lastFirstName,
     int? id,
-    String? lastName,
     int? numberOfVotes,
 }) = _ParliamentMember;
   factory ParliamentMember.fromJson(Map<String, Object?> json) =>

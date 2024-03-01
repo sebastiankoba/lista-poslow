@@ -13,10 +13,9 @@ _$ParliamentMemberImpl _$$ParliamentMemberImplFromJson(
       birthDate: json['birthDate'] as String?,
       club: json['club'] as String?,
       districtName: json['districtName'] as String?,
-      educationLevel: json['educationLevel'] as String?,
-      firstName: json['firstName'] as String?,
+      profession: json['profession'] as String?,
+      lastFirstName: json['lastFirstName'] as String?,
       id: json['id'] as int?,
-      lastName: json['lastName'] as String?,
       numberOfVotes: json['numberOfVotes'] as int?,
     );
 
@@ -27,9 +26,8 @@ Map<String, dynamic> _$$ParliamentMemberImplToJson(
       'birthDate': instance.birthDate,
       'club': instance.club,
       'districtName': instance.districtName,
-      'educationLevel': instance.educationLevel,
-      'firstName': instance.firstName,
+      'profession': instance.profession,
+      'lastFirstName': instance.lastFirstName,
       'id': instance.id,
-      'lastName': instance.lastName,
       'numberOfVotes': instance.numberOfVotes,
     };

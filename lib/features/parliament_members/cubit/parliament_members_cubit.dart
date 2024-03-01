@@ -20,6 +20,7 @@ class ParliamentMembersCubit extends Cubit<ParliamentMembersCubitState> {
   List<ParliamentMember> parliamentMembersToShow = [];
   int parliamentMembersToShowValue = 15;
   int? termNum;
+  String? filterText;
 
   Future<void> getParliamentMembersFullData() async {
     try {
@@ -29,7 +30,7 @@ class ParliamentMembersCubit extends Cubit<ParliamentMembersCubitState> {
       parliamentMembers = parliamentMembers.where((element) => element.active ?? false).toList();
       //default sorting
       parliamentMembers.sort((a, b) {
-        int result = PolishComparator.compare(a.lastName.toString().toLowerCase(), b.lastName.toString().toLowerCase());
+        int result = PolishComparator.compare(a.lastFirstName.toString().toLowerCase(), b.lastFirstName.toString().toLowerCase());
         return result;
       });
       parliamentMembersToShow = parliamentMembers;
@@ -56,8 +57,9 @@ class ParliamentMembersCubit extends Cubit<ParliamentMembersCubitState> {
   }
 
   Future<void> filterParliamentMembers(String text) async {
+    filterText = text;
     if(text.isNotEmpty) {
-      parliamentMembersToShow = parliamentMembers.where((element) => element.lastName.toString().toLowerCase().contains(text.toLowerCase())).toList();
+      parliamentMembersToShow = parliamentMembers.where((element) => element.lastFirstName.toString().toLowerCase().contains(text.toLowerCase())).toList();
       if(parliamentMembersToShow.length < parliamentMembersToShowValue) {
         parliamentMembersToShowValue = parliamentMembersToShow.length;
       } else {

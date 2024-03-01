@@ -24,10 +24,9 @@ mixin _$ParliamentMember {
   String? get birthDate => throw _privateConstructorUsedError;
   String? get club => throw _privateConstructorUsedError;
   String? get districtName => throw _privateConstructorUsedError;
-  String? get educationLevel => throw _privateConstructorUsedError;
-  String? get firstName => throw _privateConstructorUsedError;
+  String? get profession => throw _privateConstructorUsedError;
+  String? get lastFirstName => throw _privateConstructorUsedError;
   int? get id => throw _privateConstructorUsedError;
-  String? get lastName => throw _privateConstructorUsedError;
   int? get numberOfVotes => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -47,10 +46,9 @@ abstract class $ParliamentMemberCopyWith<$Res> {
       String? birthDate,
       String? club,
       String? districtName,
-      String? educationLevel,
-      String? firstName,
+      String? profession,
+      String? lastFirstName,
       int? id,
-      String? lastName,
       int? numberOfVotes});
 }
 
@@ -71,10 +69,9 @@ class _$ParliamentMemberCopyWithImpl<$Res, $Val extends ParliamentMember>
     Object? birthDate = freezed,
     Object? club = freezed,
     Object? districtName = freezed,
-    Object? educationLevel = freezed,
-    Object? firstName = freezed,
+    Object? profession = freezed,
+    Object? lastFirstName = freezed,
     Object? id = freezed,
-    Object? lastName = freezed,
     Object? numberOfVotes = freezed,
   }) {
     return _then(_value.copyWith(
@@ -94,22 +91,18 @@ class _$ParliamentMemberCopyWithImpl<$Res, $Val extends ParliamentMember>
           ? _value.districtName
           : districtName // ignore: cast_nullable_to_non_nullable
               as String?,
-      educationLevel: freezed == educationLevel
-          ? _value.educationLevel
-          : educationLevel // ignore: cast_nullable_to_non_nullable
+      profession: freezed == profession
+          ? _value.profession
+          : profession // ignore: cast_nullable_to_non_nullable
               as String?,
-      firstName: freezed == firstName
-          ? _value.firstName
-          : firstName // ignore: cast_nullable_to_non_nullable
+      lastFirstName: freezed == lastFirstName
+          ? _value.lastFirstName
+          : lastFirstName // ignore: cast_nullable_to_non_nullable
               as String?,
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int?,
-      lastName: freezed == lastName
-          ? _value.lastName
-          : lastName // ignore: cast_nullable_to_non_nullable
-              as String?,
       numberOfVotes: freezed == numberOfVotes
           ? _value.numberOfVotes
           : numberOfVotes // ignore: cast_nullable_to_non_nullable
@@ -131,10 +124,9 @@ abstract class _$$ParliamentMemberImplCopyWith<$Res>
       String? birthDate,
       String? club,
       String? districtName,
-      String? educationLevel,
-      String? firstName,
+      String? profession,
+      String? lastFirstName,
       int? id,
-      String? lastName,
       int? numberOfVotes});
 }
 
@@ -153,10 +145,9 @@ class __$$ParliamentMemberImplCopyWithImpl<$Res>
     Object? birthDate = freezed,
     Object? club = freezed,
     Object? districtName = freezed,
-    Object? educationLevel = freezed,
-    Object? firstName = freezed,
+    Object? profession = freezed,
+    Object? lastFirstName = freezed,
     Object? id = freezed,
-    Object? lastName = freezed,
     Object? numberOfVotes = freezed,
   }) {
     return _then(_$ParliamentMemberImpl(
@@ -176,22 +167,18 @@ class __$$ParliamentMemberImplCopyWithImpl<$Res>
           ? _value.districtName
           : districtName // ignore: cast_nullable_to_non_nullable
               as String?,
-      educationLevel: freezed == educationLevel
-          ? _value.educationLevel
-          : educationLevel // ignore: cast_nullable_to_non_nullable
+      profession: freezed == profession
+          ? _value.profession
+          : profession // ignore: cast_nullable_to_non_nullable
               as String?,
-      firstName: freezed == firstName
-          ? _value.firstName
-          : firstName // ignore: cast_nullable_to_non_nullable
+      lastFirstName: freezed == lastFirstName
+          ? _value.lastFirstName
+          : lastFirstName // ignore: cast_nullable_to_non_nullable
               as String?,
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int?,
-      lastName: freezed == lastName
-          ? _value.lastName
-          : lastName // ignore: cast_nullable_to_non_nullable
-              as String?,
       numberOfVotes: freezed == numberOfVotes
           ? _value.numberOfVotes
           : numberOfVotes // ignore: cast_nullable_to_non_nullable
@@ -208,10 +195,9 @@ class _$ParliamentMemberImpl implements _ParliamentMember {
       this.birthDate,
       this.club,
       this.districtName,
-      this.educationLevel,
-      this.firstName,
+      this.profession,
+      this.lastFirstName,
       this.id,
-      this.lastName,
       this.numberOfVotes});
 
   factory _$ParliamentMemberImpl.fromJson(Map<String, dynamic> json) =>
@@ -226,19 +212,17 @@ class _$ParliamentMemberImpl implements _ParliamentMember {
   @override
   final String? districtName;
   @override
-  final String? educationLevel;
+  final String? profession;
   @override
-  final String? firstName;
+  final String? lastFirstName;
   @override
   final int? id;
-  @override
-  final String? lastName;
   @override
   final int? numberOfVotes;
 
   @override
   String toString() {
-    return 'ParliamentMember(active: $active, birthDate: $birthDate, club: $club, districtName: $districtName, educationLevel: $educationLevel, firstName: $firstName, id: $id, lastName: $lastName, numberOfVotes: $numberOfVotes)';
+    return 'ParliamentMember(active: $active, birthDate: $birthDate, club: $club, districtName: $districtName, profession: $profession, lastFirstName: $lastFirstName, id: $id, numberOfVotes: $numberOfVotes)';
   }
 
   @override
@@ -252,13 +236,11 @@ class _$ParliamentMemberImpl implements _ParliamentMember {
             (identical(other.club, club) || other.club == club) &&
             (identical(other.districtName, districtName) ||
                 other.districtName == districtName) &&
-            (identical(other.educationLevel, educationLevel) ||
-                other.educationLevel == educationLevel) &&
-            (identical(other.firstName, firstName) ||
-                other.firstName == firstName) &&
+            (identical(other.profession, profession) ||
+                other.profession == profession) &&
+            (identical(other.lastFirstName, lastFirstName) ||
+                other.lastFirstName == lastFirstName) &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.lastName, lastName) ||
-                other.lastName == lastName) &&
             (identical(other.numberOfVotes, numberOfVotes) ||
                 other.numberOfVotes == numberOfVotes));
   }
@@ -266,7 +248,7 @@ class _$ParliamentMemberImpl implements _ParliamentMember {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, active, birthDate, club,
-      districtName, educationLevel, firstName, id, lastName, numberOfVotes);
+      districtName, profession, lastFirstName, id, numberOfVotes);
 
   @JsonKey(ignore: true)
   @override
@@ -289,10 +271,9 @@ abstract class _ParliamentMember implements ParliamentMember {
       final String? birthDate,
       final String? club,
       final String? districtName,
-      final String? educationLevel,
-      final String? firstName,
+      final String? profession,
+      final String? lastFirstName,
       final int? id,
-      final String? lastName,
       final int? numberOfVotes}) = _$ParliamentMemberImpl;
 
   factory _ParliamentMember.fromJson(Map<String, dynamic> json) =
@@ -307,13 +288,11 @@ abstract class _ParliamentMember implements ParliamentMember {
   @override
   String? get districtName;
   @override
-  String? get educationLevel;
+  String? get profession;
   @override
-  String? get firstName;
+  String? get lastFirstName;
   @override
   int? get id;
-  @override
-  String? get lastName;
   @override
   int? get numberOfVotes;
   @override
