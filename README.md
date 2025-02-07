@@ -36,6 +36,7 @@ This Flutter web application showcases a list of members of the Polish Parliamen
 ## Dependencies
 - [flutter_bloc](https://pub.dev/packages/flutter_bloc): Allows using Cubit for reactive state management.
 - [dio](https://pub.dev/packages/dio): HTTP client for handling network requests.
+- [freezed](https://pub.dev/packages/freezed_annotation): Code generator for immutable data classes and unions.
 - [go_router](https://pub.dev/packages/go_router): Package for managing navigation.
 - [image_network](https://pub.dev/packages/image_network): For displaying network images with caching support.
 - [json_serializable](https://pub.dev/packages/json_serializable): Generates model classes for JSON serialization and deserialization.
