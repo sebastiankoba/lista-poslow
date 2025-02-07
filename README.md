@@ -2,14 +2,14 @@
 
 Web application in Flutter presenting a list of members of the Polish parliament of the current term. It demonstrates fetching of data from remote repository and separating codebase into layers with clear responsibilities. 
 
-Data comes from the [official API](https://api.sejm.gov.pl/) provided by the Polish parliament. App uses **Cubit** as a state management solution. It utilizes also **Freezed** to generate immutable classes for state management and data models. In addition, it supports responsiveness to allow information to be viewed clearly on multiple screens.  
+Data comes from the [official API](https://api.sejm.gov.pl/) provided by the Polish parliament. App uses Cubit as a state management solution. It utilizes also Freezed to generate immutable classes for state management and data models. In addition, it supports responsiveness to allow information to be viewed clearly on multiple screens.  
 
 ## Key Features
 - **API Integration**: Fetches and displays real-time data.
 - **Search Box**: Allows users to quickly find relevant item with real-time filtering.
 - **Responsiveness**: Optimized for both desktop and mobile browsers.
 - **Dynamic Fixed Header**: The headline disappears when scrolling up for better visibility.
-- **State Management**: Uses efficient solutions to manage the application state seamlessly.
+- **State Management**: Uses efficient solutions(Cubit) to manage the application state seamlessly.
 
 ## Screenshots
 <div style="display: flex; align-items: center;">
@@ -35,7 +35,13 @@ Data comes from the [official API](https://api.sejm.gov.pl/) provided by the Pol
    flutter run -d chrome
    ```
 
-## Structure
 ## Dependencies
-## Contribution
+- [flutter_bloc](https://pub.dev/packages/flutter_bloc): Allows using Cubit for reactive state management.
+- [dio](https://pub.dev/packages/dio): HTTP client for handling network requests.
+- [go_router](https://pub.dev/packages/go_router): Package for managing navigation.
+- [image_network](https://pub.dev/packages/image_network): For displaying network images with caching support.
+- [json_serializable](https://pub.dev/packages/json_serializable): Generates model classes for JSON serialization and deserialization.
+
+For the full list of dependencies and their versions, please refer to the [`pubspec.yaml`](pubspec.yaml) file.
+
 
