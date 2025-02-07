@@ -1,8 +1,6 @@
 # Polish Parliament Members List
 
-Web application in Flutter presenting a list of members of the Polish parliament of the current term. It demonstrates fetching of data from remote repository and separating codebase into layers with clear responsibilities. 
-
-Data comes from the [official API](https://api.sejm.gov.pl/) provided by the Polish parliament. App uses Cubit as a state management solution. It utilizes also Freezed to generate immutable classes for state management and data models. In addition, it supports responsiveness to allow information to be viewed clearly on multiple screens.  
+This Flutter web application showcases a list of members of the Polish Parliament for the current term. It demonstrates how to fetch data from a remote API (using the [official Polish Parliament API](https://api.sejm.gov.pl/)) and organize the codebase into clean, well-defined layers. The app uses Cubit for state management and Freezed to generate immutable classes for both state and data models. Additionally, it is designed to be fully responsive, ensuring a seamless experience across different devices and screen sizes.
 
 ## Key Features
 - **API Integration**: Fetches and displays real-time data.
